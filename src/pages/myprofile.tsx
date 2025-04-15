@@ -253,42 +253,53 @@ export default function MyProfilePage() {
 
             <section className="my-tweets">
               <h3>Deleted Tweets</h3>
-              {deletedTweets.map((tweet) => (
-                <div key={tweet.id} className="card">
-                  <p>
-                    <strong>{tweet.username}</strong>
-                    <br />
-                    <span className="tweet-meta">
-                      {tweet.author} -{" "}
-                      {new Date(tweet.timeStamp * 1000).toLocaleString()}
-                    </span>
-                  </p>
-                  <p>{tweet.text}</p>
-                  {tweet.imageUrl && (
-                    <Image
-                      src={tweet.imageUrl}
-                      alt="Tweet"
-                      className="tweet-Image"
-                    />
-                  )}
-                  <p className="tweet-stats">
-                    Likes: {tweet.likeCount} | Comments: {tweet.comments.length}
-                  </p>
-                  <div className="tweet-comments">
-                    {tweet.comments.map((comment) => (
-                      <p key={comment.id} className="tweet-comment">
-                        <strong>{comment.username}</strong>
+              {deletedTweets.length === 0 ? (
+                <p style={{ color: "gray", fontStyle: "italic", textAlign: "center" , justifyContent: "center"}}>
+                  No Deleted Tweets
+                </p>
+              ) : (
+                <>
+                  {deletedTweets.map((tweet) => (
+                    <div key={tweet.id} className="card">
+                      <p>
+                        <strong>{tweet.username}</strong>
                         <br />
                         <span className="tweet-meta">
-                          {comment.author} -{" "}
-                          {new Date(comment.timestamp * 1000).toLocaleString()}
+                          {tweet.author} -{" "}
+                          {new Date(tweet.timeStamp * 1000).toLocaleString()}
                         </span>
-                        : {comment.text}
                       </p>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                      <p>{tweet.text}</p>
+                      {tweet.imageUrl && (
+                        <Image
+                          src={tweet.imageUrl}
+                          alt="Tweet"
+                          className="tweet-Image"
+                        />
+                      )}
+                      <p className="tweet-stats">
+                        Likes: {tweet.likeCount} | Comments:{" "}
+                        {tweet.comments.length}
+                      </p>
+                      <div className="tweet-comments">
+                        {tweet.comments.map((comment) => (
+                          <p key={comment.id} className="tweet-comment">
+                            <strong>{comment.username}</strong>
+                            <br />
+                            <span className="tweet-meta">
+                              {comment.author} -{" "}
+                              {new Date(
+                                comment.timestamp * 1000
+                              ).toLocaleString()}
+                            </span>
+                            : {comment.text}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
             </section>
 
             <section className="my-comments">
