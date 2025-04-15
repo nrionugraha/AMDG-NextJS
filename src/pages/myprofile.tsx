@@ -3,6 +3,8 @@ import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
 import CONTRACT_ABI from '../abi/AMDG.json';
 import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const CONTRACT_ADDRESS = "0x789FB401acBA27e8fAeC793CC392536Da43BdB52";
 
@@ -161,10 +163,10 @@ export default function MyProfilePage () {
           </Head>
           <header className="navbar">
             <div className="nav-left">
-              <a href="/main" className="nav-logo">AMDG</a>
+              <Link href="/main" className="nav-logo">AMDG</Link>
             </div>
             <div className="nav-right">
-              <a href="/myprofile" className="nav-link">Profile</a>
+              <Link href="/myprofile" className="nav-link">Profile</Link>
               <button onClick={() => router.push('/')} className="btn logout">Logout</button>
               <label className="switch">
                 <input type="checkbox" checked={darkMode} onChange={toggleDarkMode} />
@@ -187,7 +189,7 @@ export default function MyProfilePage () {
                 <div key={tweet.id} className="card">
                   <p><strong>{tweet.username}</strong><br /><span className="tweet-meta">{tweet.author} - {new Date(tweet.timeStamp * 1000).toLocaleString()}</span></p>
                   <p>{tweet.text}</p>
-                  {tweet.imageUrl && <img src={tweet.imageUrl} alt="Tweet" className="tweet-img" />}
+                  {tweet.imageUrl && <Image src={tweet.imageUrl} alt="Tweet" className="tweet-Image" />}
                   <p className="tweet-stats">Likes: {tweet.likeCount} | Comments: {tweet.comments.length}</p>
                   <div className="tweet-comments">
                     {tweet.comments.map(comment => (
@@ -207,7 +209,7 @@ export default function MyProfilePage () {
                 <div key={tweet.id} className="card">
                   <p><strong>{tweet.username}</strong><br /><span className="tweet-meta">{tweet.author} - {new Date(tweet.timeStamp * 1000).toLocaleString()}</span></p>
                   <p>{tweet.text}</p>
-                  {tweet.imageUrl && <img src={tweet.imageUrl} alt="Tweet" className="tweet-img" />}
+                  {tweet.imageUrl && <Image src={tweet.imageUrl} alt="Tweet" className="tweet-Image" />}
                   <p className="tweet-stats">Likes: {tweet.likeCount} | Comments: {tweet.comments.length}</p>
                   <div className="tweet-comments">
                     {tweet.comments.map(comment => (
