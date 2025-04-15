@@ -233,9 +233,9 @@ export default function MainPage() {
       </Head>
       <header className="navbar">
         <div className="nav-left">
-          <a href="/main" className="nav-logo">
+          <Link href="/main" className="nav-logo">
             AMDG
-          </a>
+          </Link>
         </div>
         <div className="nav-right">
           <Link href="/myprofile" className="nav-link">
