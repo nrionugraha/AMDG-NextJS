@@ -158,7 +158,7 @@ export default function MyProfilePage() {
         }
       }
       setMyComments(comments);
-      setCommentCount(totalComments);
+      setCommentCount(comments.length);
     } catch (error) {
       console.error("Error loading tweets:", error);
     } finally {
