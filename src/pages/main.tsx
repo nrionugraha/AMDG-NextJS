@@ -1,18 +1,11 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { useRouter } from "next/router";
 import CONTRACT_ABI from "../abi/AMDG.json";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 
 const CONTRACT_ADDRESS = "0x789FB401acBA27e8fAeC793CC392536Da43BdB52";
-
-declare global {
-  interface Window {
-    ethereum: any;
-  }
-}
 
 interface Tweet {
   id: number;
@@ -23,6 +16,7 @@ interface Tweet {
   likeCount: number;
   deleted: boolean;
   username: string;
+  comments: Comment[];
   hasLiked: boolean;
 }
 
@@ -36,24 +30,36 @@ interface Comment {
 }
 
 export default function MainPage() {
-  const [provider, setProvider] =
+  const [__provider, setProvider] =
     useState<ethers.providers.Web3Provider | null>(null);
-  const [signer, setSigner] = useState<ethers.Signer | null>(null);
+  const [__signer, setSigner] = useState<ethers.Signer | null>(null);
   const [contracts, setContracts] = useState<ethers.Contract | null>(null);
   const [tweets, setTweets] = useState<Tweet[]>([]);
-  const [comments, setComments] = useState<Record<number, Comment[]>>({});
+  const [__comments, __setComments] = useState<Record<number, Comment[]>>({});
   const [tweetText, setTweetText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [wallet, setWallet] = useState("");
   const [darkMode, setDarkMode] = useState(false);
 
-  const router = useRouter();
 
   useEffect(() => {
     const savedMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedMode);
     document.body.classList.toggle("dark", savedMode);
-
+    const connect = async () => {
+      if (!window.ethereum) return alert("Please install MetaMask");
+      const p = new ethers.providers.Web3Provider(window.ethereum);
+      await p.send("eth_requestAccounts", []);
+      const s = p.getSigner();
+      const addr = await s.getAddress();
+      const c = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, s);
+  
+      setProvider(p);
+      setSigner(s);
+      setContracts(c);
+      setWallet(addr);
+      await loadFeed(c, addr);
+    };
     connect();
   }, []);
 
@@ -64,20 +70,7 @@ export default function MainPage() {
     document.body.classList.toggle("dark", newMode);
   };
 
-  const connect = async () => {
-    if (!window.ethereum) return alert("Please install MetaMask");
-    const p = new ethers.providers.Web3Provider(window.ethereum);
-    await p.send("eth_requestAccounts", []);
-    const s = p.getSigner();
-    const addr = await s.getAddress();
-    const c = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, s);
-
-    setProvider(p);
-    setSigner(s);
-    setContracts(c);
-    setWallet(addr);
-    await loadFeed(c, addr);
-  };
+  
 
   const loadFeed = async (c: ethers.Contract, addr: string) => {
     const tweetCount = await c.tweetCount();
@@ -87,8 +80,27 @@ export default function MainPage() {
       const t = await c.tweets(i);
       if (t.deleted) continue;
 
+      const tweetId = t.id.toNumber();
       const [username] = await c.users(t.author);
       const hasLiked = await c.tweetLikes(t.id, addr);
+      const comments: Comment[] = [];
+
+      const commentCount = await c.commentCount();
+
+        for (let j = 0; j < commentCount.toNumber(); j++) {
+          const comment = await c.comments(j);
+          if (comment.tweetId.toNumber() === tweetId) {
+            const [commentUsername] = await c.users(comment.author);
+            comments.push({
+              id: comment.id.toNumber(),
+              tweetId: tweetId,
+              author: comment.author,
+              text: comment.text,
+              timestamp: comment.timestamp.toNumber(),
+              username: commentUsername,
+            });
+          }
+        }
 
       allTweets.push({
         id: t.id.toNumber(),
@@ -99,6 +111,7 @@ export default function MainPage() {
         likeCount: t.likeCount.toNumber(),
         deleted: t.deleted,
         username,
+        comments,
         hasLiked,
       });
     }
@@ -222,9 +235,24 @@ export default function MainPage() {
             </svg>
           </button>
         </div>
-      </div>
-    );
-  };
+        {t.comments.length > 0 && (
+        <div className="tweet-comments">
+          {t.comments.map((comment) => (
+            <p key={comment.id} className="tweet-comment">
+              <strong>{comment.username}</strong>
+              <br />
+              <span className="tweet-meta">
+                {comment.author} -{" "}
+                {new Date(comment.timestamp * 1000).toLocaleString()}
+              </span>
+              : {comment.text}
+            </p>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}   
 
   return (
     <>

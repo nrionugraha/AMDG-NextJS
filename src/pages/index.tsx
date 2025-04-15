@@ -6,12 +6,6 @@ import Head from 'next/head';
 
 const CONTRACT_ADDRESS = "0x789FB401acBA27e8fAeC793CC392536Da43BdB52";
 
-declare global{
-    interface Window{
-        ethereum: any;
-    }
-}
-
 export default function LoginPage() {
     const [ wallet, setWallet ] = useState<string | null>(null);
     const [ username, setUsername ] = useState("");
@@ -36,7 +30,9 @@ export default function LoginPage() {
 
     const connectWallet = async () => {
         if (!window.ethereum) return alert("Please install MetaMask");
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if (window.ethereum.request){
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+        }
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
