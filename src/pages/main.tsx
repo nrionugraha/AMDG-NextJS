@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import CONTRACT_ABI from "../abi/AMDG.json";
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 
 const CONTRACT_ADDRESS = "0x789FB401acBA27e8fAeC793CC392536Da43BdB52";
 
@@ -165,7 +166,7 @@ export default function MainPage() {
         </p>
         <p>{t.text}</p>
         {t.imageUrl && (
-          <img
+          <Image
             src={t.imageUrl}
             alt="Tweet Image"
             style={{ maxWidth: "100%", borderRadius: "8px" }}
