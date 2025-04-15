@@ -41,7 +41,6 @@ export default function MainPage() {
   const [wallet, setWallet] = useState("");
   const [darkMode, setDarkMode] = useState(false);
 
-
   useEffect(() => {
     const savedMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedMode);
@@ -53,7 +52,7 @@ export default function MainPage() {
       const s = p.getSigner();
       const addr = await s.getAddress();
       const c = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, s);
-  
+
       setProvider(p);
       setSigner(s);
       setContracts(c);
@@ -70,8 +69,6 @@ export default function MainPage() {
     document.body.classList.toggle("dark", newMode);
   };
 
-  
-
   const loadFeed = async (c: ethers.Contract, addr: string) => {
     const tweetCount = await c.tweetCount();
     const allTweets: Tweet[] = [];
@@ -87,20 +84,20 @@ export default function MainPage() {
 
       const commentCount = await c.commentCount();
 
-        for (let j = 0; j < commentCount.toNumber(); j++) {
-          const comment = await c.comments(j);
-          if (comment.tweetId.toNumber() === tweetId) {
-            const [commentUsername] = await c.users(comment.author);
-            comments.push({
-              id: comment.id.toNumber(),
-              tweetId: tweetId,
-              author: comment.author,
-              text: comment.text,
-              timestamp: comment.timestamp.toNumber(),
-              username: commentUsername,
-            });
-          }
+      for (let j = 0; j < commentCount.toNumber(); j++) {
+        const comment = await c.comments(j);
+        if (comment.tweetId.toNumber() === tweetId) {
+          const [commentUsername] = await c.users(comment.author);
+          comments.push({
+            id: comment.id.toNumber(),
+            tweetId: tweetId,
+            author: comment.author,
+            text: comment.text,
+            timestamp: comment.timestamp.toNumber(),
+            username: commentUsername,
+          });
         }
+      }
 
       allTweets.push({
         id: t.id.toNumber(),
@@ -236,23 +233,23 @@ export default function MainPage() {
           </button>
         </div>
         {t.comments.length > 0 && (
-        <div className="tweet-comments">
-          {t.comments.map((comment) => (
-            <p key={comment.id} className="tweet-comment">
-              <strong>{comment.username}</strong>
-              <br />
-              <span className="tweet-meta">
-                {comment.author} -{" "}
-                {new Date(comment.timestamp * 1000).toLocaleString()}
-              </span>
-              : {comment.text}
-            </p>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}   
+          <div className="tweet-comments">
+            {t.comments.map((comment) => (
+              <p key={comment.id} className="tweet-comment">
+                <strong>{comment.username}</strong>
+                <br />
+                <span className="tweet-meta">
+                  {comment.author} -{" "}
+                  {new Date(comment.timestamp * 1000).toLocaleString()}
+                </span>
+                : {comment.text}
+              </p>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <>
