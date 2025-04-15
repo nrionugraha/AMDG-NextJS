@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ethers } from "ethers";
 import CONTRACT_ABI from "../abi/AMDG.json";
 import Head from "next/head";
@@ -42,6 +42,7 @@ export default function MainPage() {
   const [wallet, setWallet] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const commentInputRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
   useEffect(() => {
     const savedMode = localStorage.getItem("darkMode") === "true";
@@ -161,6 +162,7 @@ export default function MainPage() {
 
   const renderTweet = (t: Tweet) => {
     const likeBtnClass = t.hasLiked ? "icon-btn liked" : "icon-btn";
+
     return (
       <div key={t.id} className="card">
         {t.author.toLowerCase() === wallet.toLowerCase() && (
@@ -209,6 +211,9 @@ export default function MainPage() {
             </svg>
           </button>
           <input
+            ref={(el) => {
+              commentInputRefs.current[t.id] = el;
+            }}
             className="input comment-input"
             type="text"
             placeholder="Add a comment"
@@ -221,7 +226,13 @@ export default function MainPage() {
           />
           <button
             className="icon-btn"
-            onClick={() => commentTweet(t.id, "")}
+            onClick={() => {
+              const value = commentInputRefs.current[t.id]?.value;
+              if (value) {
+                commentTweet(t.id, value);
+                commentInputRefs.current[t.id]!.value = "";
+              }
+            }}
             title="Comment"
           >
             <svg
