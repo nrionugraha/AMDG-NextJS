@@ -1,8 +1,8 @@
-import { ethers } from "ethers";
+import { providers } from "ethers";
 
 declare global {
     interface Window {
-      ethereum: any;
+      ethereum: providers;
     }
   }
 

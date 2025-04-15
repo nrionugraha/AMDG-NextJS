@@ -4,6 +4,7 @@ import CONTRACT_ABI from "../abi/AMDG.json";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const CONTRACT_ADDRESS = "0x789FB401acBA27e8fAeC793CC392536Da43BdB52";
 
@@ -40,6 +41,7 @@ export default function MainPage() {
   const [imageUrl, setImageUrl] = useState("");
   const [wallet, setWallet] = useState("");
   const [darkMode, setDarkMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const savedMode = localStorage.getItem("darkMode") === "true";
@@ -70,50 +72,57 @@ export default function MainPage() {
   };
 
   const loadFeed = async (c: ethers.Contract, addr: string) => {
-    const tweetCount = await c.tweetCount();
-    const allTweets: Tweet[] = [];
+    setIsLoading(true); // mulai loading
+    try {
+      const tweetCount = await c.tweetCount();
+      const allTweets: Tweet[] = [];
 
-    for (let i = tweetCount.toNumber() - 1; i >= 0; i--) {
-      const t = await c.tweets(i);
-      if (t.deleted) continue;
+      for (let i = tweetCount.toNumber() - 1; i >= 0; i--) {
+        const t = await c.tweets(i);
+        if (t.deleted) continue;
 
-      const tweetId = t.id.toNumber();
-      const [username] = await c.users(t.author);
-      const hasLiked = await c.tweetLikes(t.id, addr);
-      const comments: Comment[] = [];
+        const tweetId = t.id.toNumber();
+        const [username] = await c.users(t.author);
+        const hasLiked = await c.tweetLikes(t.id, addr);
+        const comments: Comment[] = [];
 
-      const commentCount = await c.commentCount();
+        const commentCount = await c.commentCount();
 
-      for (let j = 0; j < commentCount.toNumber(); j++) {
-        const comment = await c.comments(j);
-        if (comment.tweetId.toNumber() === tweetId) {
-          const [commentUsername] = await c.users(comment.author);
-          comments.push({
-            id: comment.id.toNumber(),
-            tweetId: tweetId,
-            author: comment.author,
-            text: comment.text,
-            timestamp: comment.timestamp.toNumber(),
-            username: commentUsername,
-          });
+        for (let j = 0; j < commentCount.toNumber(); j++) {
+          const comment = await c.comments(j);
+          if (comment.tweetId.toNumber() === tweetId) {
+            const [commentUsername] = await c.users(comment.author);
+            comments.push({
+              id: comment.id.toNumber(),
+              tweetId: tweetId,
+              author: comment.author,
+              text: comment.text,
+              timestamp: comment.timestamp.toNumber(),
+              username: commentUsername,
+            });
+          }
         }
+
+        allTweets.push({
+          id: t.id.toNumber(),
+          author: t.author,
+          text: t.text,
+          imageUrl: t.imageUrl,
+          timestamp: t.timestamp.toNumber(),
+          likeCount: t.likeCount.toNumber(),
+          deleted: t.deleted,
+          username,
+          comments,
+          hasLiked,
+        });
       }
 
-      allTweets.push({
-        id: t.id.toNumber(),
-        author: t.author,
-        text: t.text,
-        imageUrl: t.imageUrl,
-        timestamp: t.timestamp.toNumber(),
-        likeCount: t.likeCount.toNumber(),
-        deleted: t.deleted,
-        username,
-        comments,
-        hasLiked,
-      });
+      setTweets(allTweets);
+    } catch (error) {
+      console.error("Error loading tweets:", error);
+    } finally {
+      setIsLoading(false); // selesai loading
     }
-
-    setTweets(allTweets);
   };
 
   const postTweet = async () => {
@@ -296,13 +305,20 @@ export default function MainPage() {
           </button>
         </section>
 
-        <section className="feed">
-          {tweets.length === 0 ? (
-            <p>No tweets yet.</p>
-          ) : (
-            tweets.map(renderTweet)
-          )}
-        </section>
+        {isLoading ? (
+          <div style={{ textAlign: "center", padding: "20px" }}>
+            <AiOutlineLoading className="loader"></AiOutlineLoading>
+            <p>Tweets Incoming!!!</p>
+          </div>
+        ) : (
+          <section className="feed">
+            {tweets.length === 0 ? (
+              <p>No tweets yet.</p>
+            ) : (
+              tweets.map(renderTweet)
+            )}
+          </section>
+        )}
       </main>
     </>
   );
