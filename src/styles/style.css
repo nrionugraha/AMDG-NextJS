@@ -1,0 +1,660 @@
+@font-face {
+  font-family: "SF Pro Text";
+  font-style: normal;
+  font-weight: 300;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProText-Light.ttf");
+}
+@font-face {
+  font-family: "SF Pro Text";
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProText-Regular.ttf");
+}
+@font-face {
+  font-family: "SF Pro Text";
+  font-style: normal;
+  font-weight: 500;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProText-Medium.ttf");
+}
+@font-face {
+  font-family: "SF Pro Text";
+  font-style: normal;
+  font-weight: 600;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProText-SemiBold.ttf");
+}
+@font-face {
+  font-family: "SF Pro Text";
+  font-style: normal;
+  font-weight: 700;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProText-Bold.ttf");
+}
+@font-face {
+  font-family: "SF Pro Text";
+  font-style: normal;
+  font-weight: 900;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProText-Heavy.ttf");
+}
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 100;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProDisplay-Ultralight.ttf");
+}
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 200;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProDisplay-Thin.ttf");
+}
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 300;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProDisplay-Light.ttf");
+}
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProDisplay-Regular.ttf");
+}
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 500;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProDisplay-Medium.ttf");
+}
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 600;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProDisplay-SemiBold.ttf");
+}
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 700;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProDisplay-Bold.ttf");
+}
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 800;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProDisplay-Black.ttf");
+}
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 900;
+  src: url("https://raw.githubusercontent.com/blaisck/sfwin/master/SFPro/TrueType/SFProDisplay-Heavy.ttf");
+}
+
+/* === Global Styles === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "SF Pro Text", sans-serif;
+  background-color: #fff;
+  color: #14171a;
+  line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* === Dark Mode Overrides === */
+body.dark {
+  background-color: #15202b;
+  color: #e6e6e6;
+}
+
+/* === Navigation Bar === */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #e6ecf0;
+  background-color: #fff;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark .navbar {
+  background-color: #192734;
+  border-bottom: 1px solid #38444d;
+}
+
+.nav-left, .nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo {
+  font-family: "SF Pro Display", sans-serif;
+  font-weight: 700;
+  font-size: 1.8em;
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-link {
+  margin-left: 20px;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+/* === Toggle Switch for Dark Mode === */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+  margin-left: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.2s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-image: url("https://img.icons8.com/ios-filled/50/000000/sun--v1.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: 0.2s;
+  border-radius: 50%;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+  background-image: url("https://img.icons8.com/ios-filled/50/000000/crescent-moon.png");
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* === Button Styles === */
+.btn {
+  background-color: #1da1f2;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  color: #fff;
+  font-size: 1em;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: #0d95e8;
+}
+
+body.dark .btn {
+  background-color: #1da1f2;
+  color: #fff;
+}
+
+
+.like-btn, .comment-btn {
+  background-color: transparent;
+  border: none;
+  color: #1da1f2;
+  cursor: pointer;
+  font-size: 1em;
+  margin-right: 10px;
+  transition: color 0.2s ease;
+}
+
+.like-btn:hover, .comment-btn:hover {
+  color: #0d95e8;
+}
+
+/* Logout button */
+.logout {
+  background-color: transparent;
+  color: #1da1f2;
+  border: 1px solid transparent;
+  font-size: 1em;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: background-color 0.2s ease, border 0.2s ease;
+}
+
+.logout:hover {
+  background-color: rgba(29,161,242,0.1);
+  border: 1px solid #1da1f2;
+}
+
+/* === Input & Textarea Styles === */
+.input, .tweet-input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #e6ecf0;
+  border-radius: 4px;
+  font-size: 1em;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.tweet-input {
+  resize: none;
+  font-family: "SF Pro Text", sans-serif;
+  min-height: 80px;
+}
+
+.input:focus, .tweet-input:focus {
+  border-color: #1da1f2;
+  outline: none;
+}
+
+body.dark .input, body.dark .tweet-input {
+  background-color: #192734;
+  border-color: #38444d;
+  color: #e6e6e6;
+}
+
+/* === Login / Sign Up Page === */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f8fa;
+}
+
+body.dark .login-container {
+  background-color: #15202b;
+}
+
+.login-card {
+  background-color: #fff;
+  border: 1px solid #e6ecf0;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 8px;
+  padding: 40px;
+  width: 350px;
+  text-align: center;
+}
+
+body.dark .login-card {
+  background-color: #192734;
+  border-color: #38444d;
+}
+
+.login-card h1.logo {
+  font-family: "SF Pro Display", sans-serif;
+  font-size: 2.5em;
+  color: #1da1f2;
+  margin-bottom: 20px;
+}
+
+.login-card h2 {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  color: inherit;
+}
+
+.toggle-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toggle-label {
+  margin-left: 10px;
+  font-size: 0.9em;
+  color: inherit;
+}
+
+/* === Main Feed Page === */
+.feed-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 0 10px;
+}
+
+.new-tweet {
+  background-color: #fff;
+  border: 1px solid #e6ecf0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+body.dark .new-tweet {
+  background-color: #192734;
+  border-color: #38444d;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #e6ecf0;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Tambahkan shadow */
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark .card {
+  background-color: #192734;
+  border-color: #38444d;
+}
+
+.card p {
+  margin: 5px 0;
+}
+
+/* === Profile Page === */
+.profile-container {
+  max-width: 600px;
+  width: 100%;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.profile-card {
+  background-color: #fff;
+  border: 3px solid #e6ecf0;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Tambahkan shadow */
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+body.dark .profile-card {
+  background-color: #192734;
+  border-color: #38444d;
+}
+
+.profile-card h2 {
+  font-family: "SF Pro Display", sans-serif;
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.wallet-address {
+  font-size: 0.9em;
+  color: #657786;
+}
+
+body.dark .wallet-address {
+  color: #8899a6;
+}
+
+.my-tweets, .my-comments {
+  margin-top: 20px;
+}
+
+.my-comments h3 {
+  margin-bottom: 10px;
+}
+
+.comment-section {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
+.like-btn, .comment-btn {
+  background-color: #1da1f2; 
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 8px 16px;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.like-btn:hover, .comment-btn:hover {
+  background-color: #0d95e8;
+}
+
+.comment-input {
+  border-radius: 25px;
+  margin: 0; 
+  flex: 1; 
+}
+
+.logout {
+  background-color: transparent;
+  color: #1da1f2;
+  border: 1px solid #1da1f2;
+  border-radius: 25px;
+  padding: 8px 16px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.logout:hover {
+  background-color: rgba(29,161,242,0.1);
+}
+.hidden {
+  display: none;
+}
+
+.comment-section {
+display: flex;
+align-items: center;
+gap: 10px; 
+}
+
+actions {
+display: flex;
+align-items: center;
+gap: 16px; 
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+.icon-btn:hover {
+background-color: rgba(29,161,242,0.1); 
+}
+
+.icon-heart,
+.icon-comment {
+width: 20px;
+height: 20px;
+stroke: #8899a6;  
+fill: none;
+transition: stroke 0.2s ease;
+}
+
+.icon-btn:hover .icon-heart,
+.icon-btn:hover .icon-comment {
+stroke: #1da1f2;
+}
+
+body.dark .icon-heart,
+body.dark .icon-comment {
+stroke: #8899a6; 
+}
+
+body.dark .icon-btn:hover .icon-heart,
+body.dark .icon-btn:hover .icon-comment {
+stroke: #1da1f2;
+}
+
+.icon-btn.liked .icon-heart {
+stroke: rgb(255, 0, 0);
+fill: red; 
+}
+
+.icon-btn.liked:hover .icon-heart {
+stroke: rgb(255, 255, 255);
+}
+
+body.dark .icon-btn.liked:hover .icon-heart {
+stroke: rgba(29,161,242,0.1);
+}
+
+
+/* Tombol Delete di pojok kanan atas */
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+/* Ikon trash */
+.icon-trash {
+  width: 18px;
+  height: 18px;
+  stroke: #657786;
+  fill: none;
+  transition: stroke 0.2s ease;
+}
+
+/* Efek hover: background merah, ikon putih */
+.delete-btn:hover {
+  background-color: #e0245e; /* Warna merah */
+}
+.delete-btn:hover .icon-trash {
+  stroke: #fff;
+}
+
+.tweet-meta {
+font-family: "SF Pro Text", sans-serif; 
+font-weight: 00;       
+font-size: 0.85em;       
+color: #657786;          
+white-space: normal;     
+overflow-wrap: break-word; 
+word-break: break-all;   
+}
+
+.user-name {
+  font-family: "SF Pro Text", sans-serif; 
+  font-weight : 600;
+  font-size: 1em;
+  color: rgb(0, 0, 0) ;
+  white-space: normal;     
+  overflow-wrap: break-word; 
+  word-break: break-all;
+}
+
+body.dark .user-name {
+  color : white
+}
+  
+ /* === Responsive Media === */
+@media (max-width: 768px) {
+  .feed-container, .profile-container, .login-card {
+    width: 90%;
+    padding: 15px;
+    margin: 10px auto;
+  }
+  .profile-container {
+    padding: 10px;
+  }
+
+  .icon-btn {
+    display: inline-flex !important;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .input, .tweet-input, .comment-input {
+    padding: 10px;
+    font-size: 1em;
+  }
+  
+  body {
+    font-size: 1em;
+  }
+  
+  .tweet-meta {
+    font-size: 0.8em;
+  }
+  
+  .card, .login-card {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+/* Responsive Media Small */
+
+@media (max-width: 480px) {
+  .icon-btn {
+    display: inline-flex !important;
+    width: 36px;
+    height: 36px;
+  }
+
+  .profile-container {
+    padding: 5px;
+  }
+
+  /* Perbesar input agar lebih nyaman */
+  .input, .tweet-input, .comment-input {
+    padding: 12px;
+    font-size: 1.1em;
+  }
+  
+  .login-card, .feed-container, .profile-container {
+    width: 95%;
+    padding: 10px;
+  }
+}

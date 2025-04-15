@@ -1,0 +1,283 @@
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import { useRouter } from "next/router";
+import CONTRACT_ABI from "../abi/AMDG.json";
+import Head from "next/head";
+import Link from "next/link";
+
+const CONTRACT_ADDRESS = "0x789FB401acBA27e8fAeC793CC392536Da43BdB52";
+
+declare global {
+  interface Window {
+    ethereum: any;
+  }
+}
+
+interface Tweet {
+  id: number;
+  author: string;
+  text: string;
+  imageUrl: string;
+  timestamp: number;
+  likeCount: number;
+  deleted: boolean;
+  username: string;
+  hasLiked: boolean;
+}
+
+interface Comment {
+  id: number;
+  tweetId: number;
+  author: string;
+  text: string;
+  timestamp: number;
+  username: string;
+}
+
+export default function MainPage() {
+  const [provider, setProvider] =
+    useState<ethers.providers.Web3Provider | null>(null);
+  const [signer, setSigner] = useState<ethers.Signer | null>(null);
+  const [contracts, setContracts] = useState<ethers.Contract | null>(null);
+  const [tweets, setTweets] = useState<Tweet[]>([]);
+  const [comments, setComments] = useState<Record<number, Comment[]>>({});
+  const [tweetText, setTweetText] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [wallet, setWallet] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const savedMode = localStorage.getItem("darkMode") === "true";
+    setDarkMode(savedMode);
+    document.body.classList.toggle("dark", savedMode);
+
+    connect();
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem("darkMode", newMode.toString());
+    document.body.classList.toggle("dark", newMode);
+  };
+
+  const connect = async () => {
+    if (!window.ethereum) return alert("Please install MetaMask");
+    const p = new ethers.providers.Web3Provider(window.ethereum);
+    await p.send("eth_requestAccounts", []);
+    const s = p.getSigner();
+    const addr = await s.getAddress();
+    const c = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, s);
+
+    setProvider(p);
+    setSigner(s);
+    setContracts(c);
+    setWallet(addr);
+    await loadFeed(c, addr);
+  };
+
+  const loadFeed = async (c: ethers.Contract, addr: string) => {
+    const tweetCount = await c.tweetCount();
+    const allTweets: Tweet[] = [];
+
+    for (let i = tweetCount.toNumber() - 1; i >= 0; i--) {
+      const t = await c.tweets(i);
+      if (t.deleted) continue;
+
+      const [username] = await c.users(t.author);
+      const hasLiked = await c.tweetLikes(t.id, addr);
+
+      allTweets.push({
+        id: t.id.toNumber(),
+        author: t.author,
+        text: t.text,
+        imageUrl: t.imageUrl,
+        timestamp: t.timestamp.toNumber(),
+        likeCount: t.likeCount.toNumber(),
+        deleted: t.deleted,
+        username,
+        hasLiked,
+      });
+    }
+
+    setTweets(allTweets);
+  };
+
+  const postTweet = async () => {
+    if (!tweetText.trim() || !contracts) return;
+    const tx = await contracts.postTweet(tweetText, imageUrl);
+    await tx.wait();
+    setTweetText("");
+    setImageUrl("");
+    await loadFeed(contracts, wallet);
+  };
+
+  const deleteTweet = async (id: number) => {
+    if (!contracts) return;
+    const tx = await contracts.deleteTweet(id);
+    await tx.wait();
+    await loadFeed(contracts, wallet);
+  };
+
+  const likeTweet = async (id: number) => {
+    if (!contracts) return;
+    try {
+      const tx = await contracts.likeTweet(id);
+      await tx.wait();
+      await loadFeed(contracts, wallet);
+    } catch (error) {
+      console.error("Error liking tweet:", error);
+    }
+  };
+
+  const commentTweet = async (id: number, text: string) => {
+    if (!contracts || !text.trim()) return;
+    const tx = await contracts.commentTweet(id, text);
+    await tx.wait();
+    await loadFeed(contracts, wallet);
+  };
+
+  const renderTweet = (t: Tweet) => {
+    const likeBtnClass = t.hasLiked ? "icon-btn liked" : "icon-btn";
+    return (
+      <div key={t.id} className="card">
+        {t.author.toLowerCase() === wallet.toLowerCase() && (
+          <button className="delete-btn" onClick={() => deleteTweet(t.id)}>
+            <svg className="icon-trash" viewBox="0 0 24 24">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path
+                d="M19 6l-2 14a2 2 0 0 1-2 2H9
+                            a2 2 0 0 1-2-2L5 6m3 0V4
+                            a2 2 0 0 1 2-2h4
+                            a2 2 0 0 1 2 2v2"
+              ></path>
+            </svg>
+          </button>
+        )}
+        <p>
+          <span className="user-name">{t.username}</span>
+          <br />
+          <span className="tweet-meta">
+            {t.author} - {new Date(t.timestamp * 1000).toLocaleString()}
+          </span>
+        </p>
+        <p>{t.text}</p>
+        {t.imageUrl && (
+          <img
+            src={t.imageUrl}
+            alt="Tweet Image"
+            style={{ maxWidth: "100%", borderRadius: "8px" }}
+          />
+        )}
+        <p>Likes: {t.likeCount}</p>
+        <div className="comment-section">
+          <button
+            className={likeBtnClass}
+            onClick={() => likeTweet(t.id)}
+            title="Like"
+          >
+            <svg className="icon-heart" viewBox="0 0 24 24">
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78
+                                0L12 5.67l-1.06-1.06a5.5 5.5 0
+                                0 0-7.78 7.78l1.06 1.06L12
+                                21.23l7.78-7.78 1.06-1.06
+                                a5.5 5.5 0 0 0 0-7.78z"
+              ></path>
+            </svg>
+          </button>
+          <input
+            className="input comment-input"
+            type="text"
+            placeholder="Add a comment"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                commentTweet(t.id, (e.target as HTMLInputElement).value);
+                (e.target as HTMLInputElement).value = "";
+              }
+            }}
+          />
+          <button
+            className="icon-btn"
+            onClick={() => commentTweet(t.id, "")}
+            title="Comment"
+          >
+            <svg
+              className="icon-comment"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M21 15a2 2 0 0 1-2 2H7
+                                    l-4 4V5a2 2 0 0 1 2-2h14
+                                    a2 2 0 0 1 2 2z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <Head>
+        <title>AMDG - Home</title>
+        <link rel="icon" href="/icon.ico" />
+      </Head>
+      <header className="navbar">
+        <div className="nav-left">
+          <a href="/main" className="nav-logo">
+            AMDG
+          </a>
+        </div>
+        <div className="nav-right">
+          <Link href="/myprofile" className="nav-link">
+            Profile
+          </Link>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={darkMode}
+              onChange={toggleDarkMode}
+            />
+            <span className="slider round" />
+          </label>
+        </div>
+      </header>
+      <main className="feed-container">
+        <section className="new-tweet">
+          <textarea
+            value={tweetText}
+            onChange={(e) => setTweetText(e.target.value)}
+            className="tweet-input"
+            placeholder="What's happening?"
+          />
+          <input
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            className="input"
+            placeholder="Image URL (optional)"
+          />
+          <button className="btn" onClick={postTweet}>
+            Tweet
+          </button>
+        </section>
+
+        <section className="feed">
+          {tweets.length === 0 ? (
+            <p>No tweets yet.</p>
+          ) : (
+            tweets.map(renderTweet)
+          )}
+        </section>
+      </main>
+    </>
+  );
+}
