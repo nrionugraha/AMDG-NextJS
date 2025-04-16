@@ -42,6 +42,7 @@ export default function MainPage() {
   const [wallet, setWallet] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [ inputBlank, setInputBlank ] = useState<Record<number, boolean>>({});
   const commentInputRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
   useEffect(() => {
@@ -73,7 +74,7 @@ export default function MainPage() {
   };
 
   const loadFeed = async (c: ethers.Contract, addr: string) => {
-    setIsLoading(true); // mulai loading
+    setIsLoading(true); // Loading State untuk Fetch Tweet
     try {
       const tweetCount = await c.tweetCount();
       const allTweets: Tweet[] = [];
@@ -127,7 +128,12 @@ export default function MainPage() {
   };
 
   const postTweet = async () => {
-    if (!tweetText.trim() || !contracts) return;
+    if (!contracts) return;
+    if (!tweetText.trim()) {
+      setInputBlank((prev) => ({ ...prev, [0]: true }));
+      return;
+    };
+    setInputBlank((prev) => ({ ...prev, [0]: false }));
     const tx = await contracts.postTweet(tweetText, imageUrl);
     await tx.wait();
     setTweetText("");
@@ -154,7 +160,12 @@ export default function MainPage() {
   };
 
   const commentTweet = async (id: number, text: string) => {
-    if (!contracts || !text.trim()) return;
+    if (!contracts) return;
+    if (!text.trim()) {
+      setInputBlank((prev) => ({ ...prev, [id]: true }));
+      return;
+    }
+    setInputBlank((prev) => ({ ...prev, [id]: false }));
     const tx = await contracts.commentTweet(id, text);
     await tx.wait();
     await loadFeed(contracts, wallet);
@@ -214,9 +225,14 @@ export default function MainPage() {
             ref={(el) => {
               commentInputRefs.current[t.id] = el;
             }}
-            className="input comment-input"
+            className={`input comment-input ${inputBlank[t.id] ? "comment-blank" : ""}`}
             type="text"
             placeholder="Add a comment"
+            onChange={(e) => {
+              if (inputBlank[t.id] && e.target.value.trim() !== "") {
+                setInputBlank((prev) => ({ ...prev, [t.id]: false }));
+              }
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 commentTweet(t.id, (e.target as HTMLInputElement).value);

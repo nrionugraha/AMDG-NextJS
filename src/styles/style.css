@@ -451,6 +451,13 @@ body.dark .wallet-address {
   flex: 1; 
 }
 
+.comment-blank{
+  border: 2px solid red;
+  outline: none;
+  box-shadow: 0 0 5px red;
+  transition: all 0.3s ease;
+}
+
 .logout {
   background-color: transparent;
   color: #1da1f2;
