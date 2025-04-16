@@ -1,6 +1,8 @@
+"use client";
+
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import CONTRACT_ABI from '../abi/AMDG.json';
 import Head from 'next/head';
 
@@ -19,6 +21,7 @@ export default function LoginPage() {
         const savedMode = localStorage.getItem('darkMode') === "true";
         setDarkMode(savedMode);
         document.body.classList.toggle('dark', savedMode);
+        document.title = 'AMDG Social - Login';
     }, []);
 
     const toggleDarkMode = () => {

@@ -1,7 +1,9 @@
+"use client";
+
+
 import { useEffect, useState, useRef } from "react";
 import { ethers } from "ethers";
-import CONTRACT_ABI from "../abi/AMDG.json";
-import Head from "next/head";
+import CONTRACT_ABI from "../../abi/AMDG.json";
 import Link from "next/link";
 import Image from "next/image";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -63,6 +65,7 @@ export default function MainPage() {
       setContracts(c);
       setWallet(addr);
       await loadFeed(c, addr);
+      document.title = 'AMDG Social - Main Feed';
     };
     connect();
   }, []);
@@ -257,9 +260,9 @@ export default function MainPage() {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               <path
                 d="M21 15a2 2 0 0 1-2 2H7
@@ -290,10 +293,6 @@ export default function MainPage() {
 
   return (
     <>
-      <Head>
-        <title>AMDG - Home</title>
-        <link rel="icon" href="/icon.ico" />
-      </Head>
       <header className="navbar">
         <div className="nav-left">
           <Link href="/main" className="nav-logo">

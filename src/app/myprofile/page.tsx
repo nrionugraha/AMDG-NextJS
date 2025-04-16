@@ -1,7 +1,9 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { useRouter } from "next/router";
-import CONTRACT_ABI from "../abi/AMDG.json";
+import { useRouter } from "next/navigation";
+import CONTRACT_ABI from "../../abi/AMDG.json";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -67,6 +69,7 @@ export default function MyProfilePage() {
 
       await loadMyTweets(c, addr);
       await loadMyComments(c, addr);
+      document.title = 'AMDG Social - My Profile';
     };
     initProfile();
   }, []);
