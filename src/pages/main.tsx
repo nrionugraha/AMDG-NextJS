@@ -42,7 +42,7 @@ export default function MainPage() {
   const [wallet, setWallet] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [ inputBlank, setInputBlank ] = useState<Record<number, boolean>>({});
+  const [ commentBlank, setCommentBlank ] = useState<Record<number, boolean>>({});
   const commentInputRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
   useEffect(() => {
@@ -130,10 +130,10 @@ export default function MainPage() {
   const postTweet = async () => {
     if (!contracts) return;
     if (!tweetText.trim()) {
-      setInputBlank((prev) => ({ ...prev, [0]: true }));
+      setCommentBlank((prev) => ({ ...prev, [0]: true }));
       return;
     };
-    setInputBlank((prev) => ({ ...prev, [0]: false }));
+    setCommentBlank((prev) => ({ ...prev, [0]: false }));
     const tx = await contracts.postTweet(tweetText, imageUrl);
     await tx.wait();
     setTweetText("");
@@ -162,10 +162,10 @@ export default function MainPage() {
   const commentTweet = async (id: number, text: string) => {
     if (!contracts) return;
     if (!text.trim()) {
-      setInputBlank((prev) => ({ ...prev, [id]: true }));
+      setCommentBlank((prev) => ({ ...prev, [id]: true }));
       return;
     }
-    setInputBlank((prev) => ({ ...prev, [id]: false }));
+    setCommentBlank((prev) => ({ ...prev, [id]: false }));
     const tx = await contracts.commentTweet(id, text);
     await tx.wait();
     await loadFeed(contracts, wallet);
@@ -225,12 +225,12 @@ export default function MainPage() {
             ref={(el) => {
               commentInputRefs.current[t.id] = el;
             }}
-            className={`input comment-input ${inputBlank[t.id] ? "comment-blank" : ""}`}
+            className={`input comment-input ${commentBlank[t.id] ? "comment-blank" : ""}`}
             type="text"
             placeholder="Add a comment"
             onChange={(e) => {
-              if (inputBlank[t.id] && e.target.value.trim() !== "") {
-                setInputBlank((prev) => ({ ...prev, [t.id]: false }));
+              if (commentBlank[t.id] && e.target.value.trim() !== "") {
+                setCommentBlank((prev) => ({ ...prev, [t.id]: false }));
               }
             }}
             onKeyDown={(e) => {
