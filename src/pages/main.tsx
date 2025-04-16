@@ -43,6 +43,7 @@ export default function MainPage() {
   const [darkMode, setDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [ commentBlank, setCommentBlank ] = useState<Record<number, boolean>>({});
+  const [ tweetBlank, setTweetBlank ] = useState(false);
   const commentInputRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
   useEffect(() => {
@@ -130,10 +131,10 @@ export default function MainPage() {
   const postTweet = async () => {
     if (!contracts) return;
     if (!tweetText.trim()) {
-      setCommentBlank((prev) => ({ ...prev, [0]: true }));
+      setTweetBlank(true);
       return;
     };
-    setCommentBlank((prev) => ({ ...prev, [0]: false }));
+    setTweetBlank(false);
     const tx = await contracts.postTweet(tweetText, imageUrl);
     await tx.wait();
     setTweetText("");
@@ -317,8 +318,13 @@ export default function MainPage() {
         <section className="new-tweet">
           <textarea
             value={tweetText}
-            onChange={(e) => setTweetText(e.target.value)}
-            className="tweet-input"
+            onChange={(e) => {
+              setTweetText(e.target.value);
+              if (tweetBlank && e.target.value.trim() !== "") {
+                setTweetBlank(false);
+              }
+            }}
+            className={`tweet-input ${tweetBlank ? "tweet-blank" : ""}`}
             placeholder="What's happening?"
           />
           <input

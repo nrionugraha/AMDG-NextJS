@@ -267,6 +267,11 @@ body.dark .btn {
   font-family: "SF Pro Text", sans-serif;
   min-height: 80px;
 }
+.tweet-blank {
+  border: 2px solid red;
+  outline: none;
+  box-shadow: 0 0 5px red;
+}
 
 .input:focus, .tweet-input:focus {
   border-color: #1da1f2;
@@ -408,8 +413,15 @@ body.dark .profile-card {
 }
 
 .wallet-address {
-  font-size: 0.9em;
-  color: #657786;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #b0b0b0;
 }
 
 body.dark .wallet-address {
