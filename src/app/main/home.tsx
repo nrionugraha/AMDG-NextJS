@@ -78,7 +78,7 @@ export default function MainPage() {
   };
 
   const loadFeed = async (c: ethers.Contract, addr: string) => {
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
       const tweetCount = await c.tweetCount();
       const allTweets: Tweet[] = [];
@@ -144,10 +144,10 @@ export default function MainPage() {
       await tx.wait();
       setTweetText("");
       setImageUrl("");
-    }  catch (error: unknown) {
+    } catch (error: unknown) {
       if (isUserRejectedError(error)) {
         console.log("User cancelled the transaction.");
-        alert("Tweet Canceled")
+        alert("Tweet Canceled");
         return;
       }
       console.error("Error post tweet:", error);
@@ -159,9 +159,18 @@ export default function MainPage() {
 
   const deleteTweet = async (id: number) => {
     if (!contracts) return;
-    const tx = await contracts.deleteTweet(id);
-    await tx.wait();
-    await loadFeed(contracts, wallet);
+    try {
+      const tx = await contracts.deleteTweet(id);
+      await tx.wait();
+      await loadFeed(contracts, wallet);
+    } catch (error: unknown) {
+      if (isUserRejectedError(error)) {
+        console.log("User cancelled the transaction.");
+        alert("Like Tweet Canceled");
+        return;
+      }
+      console.error("Error liking tweet:", error);
+    }
   };
 
   const likeTweet = async (id: number) => {
@@ -173,7 +182,7 @@ export default function MainPage() {
     } catch (error: unknown) {
       if (isUserRejectedError(error)) {
         console.log("User cancelled the transaction.");
-        alert("Like Tweet Canceled")
+        alert("Like Tweet Canceled");
         return;
       }
       console.error("Error liking tweet:", error);
@@ -186,7 +195,7 @@ export default function MainPage() {
       setCommentBlank((prev) => ({ ...prev, [id]: true }));
       return;
     }
-    try{
+    try {
       setCommentBlank((prev) => ({ ...prev, [id]: false }));
       const tx = await contracts.commentTweet(id, text);
       await tx.wait();
@@ -194,7 +203,7 @@ export default function MainPage() {
     } catch (error: unknown) {
       if (isUserRejectedError(error)) {
         console.log("User cancelled the transaction.");
-        alert("Comment Canceled")
+        alert("Comment Canceled");
         return;
       }
       console.error("Error liking tweet:", error);

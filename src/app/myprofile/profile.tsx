@@ -176,12 +176,12 @@ export default function MyProfilePage() {
         </div>
         <div className="nav-right">
           <div className="btn-group">
-          <Link href="/myprofile" className="nav-link">
-            Profile
-          </Link>
-          <button onClick={() => router.push("/")} className="btn">
-            Log Out
-          </button>
+            <Link href="/myprofile" className="nav-link">
+              Profile
+            </Link>
+            <button onClick={() => router.push("/")} className="btn">
+              Log Out
+            </button>
           </div>
           <label className="switch">
             <input
@@ -253,7 +253,14 @@ export default function MyProfilePage() {
             <section className="my-tweets">
               <h3>Deleted Tweets</h3>
               {deletedTweets.length === 0 ? (
-                <p style={{ color: "gray", fontStyle: "italic", textAlign: "center" , justifyContent: "center"}}>
+                <p
+                  style={{
+                    color: "gray",
+                    fontStyle: "italic",
+                    textAlign: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   No Deleted Tweets
                 </p>
               ) : (
