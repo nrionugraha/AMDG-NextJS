@@ -319,7 +319,7 @@ export default function MainPage() {
                   {comment.author} -{" "}
                   {new Date(comment.timestamp * 1000).toLocaleString()}
                 </span>
-                : {comment.text}
+                : <br/>{comment.text}
               </p>
             ))}
           </div>
