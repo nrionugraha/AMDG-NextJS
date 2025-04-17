@@ -234,6 +234,16 @@ body.dark .btn {
   color: #0d95e8;
 }
 
+.like-loader {
+  width: 20px;
+  height: 20px;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+
+}
+
 /* Logout button */
 .logout {
   background-color: transparent;
@@ -615,6 +625,15 @@ word-break: break-all;
 
 body.dark .user-name {
   color : white
+}
+
+.btn-loader {
+  width: 20px;
+  height: 20px;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
 }
 
 .loader {

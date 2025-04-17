@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useEffect, useState, useRef } from "react";
 import { ethers } from "ethers";
 import CONTRACT_ABI from "../../abi/AMDG.json";
@@ -44,8 +43,9 @@ export default function MainPage() {
   const [wallet, setWallet] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [ commentBlank, setCommentBlank ] = useState<Record<number, boolean>>({});
-  const [ tweetBlank, setTweetBlank ] = useState(false);
+  const [commentBlank, setCommentBlank] = useState<Record<number, boolean>>({});
+  const [tweetBlank, setTweetBlank] = useState(false);
+  const [postLoading, setPostLoading] = useState(false);
   const commentInputRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function MainPage() {
   };
 
   const loadFeed = async (c: ethers.Contract, addr: string) => {
-    setIsLoading(true); // Loading State untuk Fetch Tweet
+    setIsLoading(true); 
     try {
       const tweetCount = await c.tweetCount();
       const allTweets: Tweet[] = [];
@@ -135,12 +135,19 @@ export default function MainPage() {
     if (!tweetText.trim()) {
       setTweetBlank(true);
       return;
-    };
+    }
     setTweetBlank(false);
-    const tx = await contracts.postTweet(tweetText, imageUrl);
-    await tx.wait();
-    setTweetText("");
-    setImageUrl("");
+    setPostLoading(true);
+    try {
+      const tx = await contracts.postTweet(tweetText, imageUrl);
+      await tx.wait();
+      setTweetText("");
+      setImageUrl("");
+    } catch (error) {
+      console.error("Error posting tweet:", error);
+    } finally {
+      setPostLoading(false);
+    }
     await loadFeed(contracts, wallet);
   };
 
@@ -228,7 +235,9 @@ export default function MainPage() {
             ref={(el) => {
               commentInputRefs.current[t.id] = el;
             }}
-            className={`input comment-input ${commentBlank[t.id] ? "comment-blank" : ""}`}
+            className={`input comment-input ${
+              commentBlank[t.id] ? "comment-blank" : ""
+            }`}
             type="text"
             placeholder="Add a comment"
             onChange={(e) => {
@@ -332,7 +341,11 @@ export default function MainPage() {
             placeholder="Image URL (optional)"
           />
           <button className="btn" onClick={postTweet}>
-            Tweet
+            {postLoading ? (
+              <AiOutlineLoading className="btn-loader" />
+            ) : (
+              "Tweet"
+            )}
           </button>
         </section>
 
