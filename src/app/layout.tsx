@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
     title: {
         template :  '%s | AMDG Social',
-        default: 'AMDG Social',
+        default: 'Login | AMDG Social',
     },
     description: 'A decentralized social media platform built with blockchain technology.',
     icons: {
