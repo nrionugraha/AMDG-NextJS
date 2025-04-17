@@ -340,7 +340,7 @@ export default function MainPage() {
             className="input"
             placeholder="Image URL (optional)"
           />
-          <button className="btn" onClick={postTweet}>
+          <button className="btn" onClick={postTweet} disabled={postLoading}>
             {postLoading ? (
               <AiOutlineLoading className="btn-loader" />
             ) : (

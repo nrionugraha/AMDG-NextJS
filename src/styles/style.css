@@ -206,17 +206,31 @@ input:checked + .slider:before {
   color: #fff;
   font-size: 1em;
   cursor: pointer;
-  margin-bottom: 10px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.1s ease;
 }
 
 .btn:hover {
-  background-color: #0d95e8;
+  background-color: #0d8ddb !important;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(29, 161, 242, 0.4);
 }
 
 body.dark .btn {
   background-color: #1da1f2;
   color: #fff;
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn:disabled{
+  background-color: #0d8ddb;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 
@@ -244,22 +258,6 @@ body.dark .btn {
 
 }
 
-/* Logout button */
-.logout {
-  background-color: transparent;
-  color: #1da1f2;
-  border: 1px solid transparent;
-  font-size: 1em;
-  cursor: pointer;
-  padding: 8px 16px;
-  border-radius: 20px;
-  transition: background-color 0.2s ease, border 0.2s ease;
-}
-
-.logout:hover {
-  background-color: rgba(29,161,242,0.1);
-  border: 1px solid #1da1f2;
-}
 
 /* === Input & Textarea Styles === */
 .input, .tweet-input {

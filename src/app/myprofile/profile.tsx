@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useRouter } from "next/navigation";
 import CONTRACT_ABI from "../../abi/AMDG.json";
-import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -169,10 +168,6 @@ export default function MyProfilePage() {
   };
   return (
     <>
-      <Head>
-        <title>My Profile</title>
-        <link rel="icon" href="/icon.ico" />
-      </Head>
       <header className="navbar">
         <div className="nav-left">
           <Link href="/main" className="nav-logo">
@@ -180,12 +175,14 @@ export default function MyProfilePage() {
           </Link>
         </div>
         <div className="nav-right">
+          <div className="btn-group">
           <Link href="/myprofile" className="nav-link">
             Profile
           </Link>
-          <button onClick={() => router.push("/")} className="btn logout">
-            Logout
+          <button onClick={() => router.push("/")} className="btn">
+            Log Out
           </button>
+          </div>
           <label className="switch">
             <input
               type="checkbox"
