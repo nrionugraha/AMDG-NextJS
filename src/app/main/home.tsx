@@ -6,6 +6,7 @@ import CONTRACT_ABI from "../../abi/AMDG.json";
 import Link from "next/link";
 import Image from "next/image";
 import { AiOutlineLoading } from "react-icons/ai";
+import { isUserRejectedError } from "../../utils/isUserRejectedError";
 
 const CONTRACT_ADDRESS = "0x789FB401acBA27e8fAeC793CC392536Da43BdB52";
 
@@ -143,8 +144,13 @@ export default function MainPage() {
       await tx.wait();
       setTweetText("");
       setImageUrl("");
-    } catch (error) {
-      console.error("Error posting tweet:", error);
+    }  catch (error: unknown) {
+      if (isUserRejectedError(error)) {
+        console.log("User cancelled the transaction.");
+        alert("Tweet Canceled")
+        return;
+      }
+      console.error("Error post tweet:", error);
     } finally {
       setPostLoading(false);
     }
@@ -164,7 +170,12 @@ export default function MainPage() {
       const tx = await contracts.likeTweet(id);
       await tx.wait();
       await loadFeed(contracts, wallet);
-    } catch (error) {
+    } catch (error: unknown) {
+      if (isUserRejectedError(error)) {
+        console.log("User cancelled the transaction.");
+        alert("Like Tweet Canceled")
+        return;
+      }
       console.error("Error liking tweet:", error);
     }
   };
@@ -175,10 +186,19 @@ export default function MainPage() {
       setCommentBlank((prev) => ({ ...prev, [id]: true }));
       return;
     }
-    setCommentBlank((prev) => ({ ...prev, [id]: false }));
-    const tx = await contracts.commentTweet(id, text);
-    await tx.wait();
-    await loadFeed(contracts, wallet);
+    try{
+      setCommentBlank((prev) => ({ ...prev, [id]: false }));
+      const tx = await contracts.commentTweet(id, text);
+      await tx.wait();
+      await loadFeed(contracts, wallet);
+    } catch (error: unknown) {
+      if (isUserRejectedError(error)) {
+        console.log("User cancelled the transaction.");
+        alert("Comment Canceled")
+        return;
+      }
+      console.error("Error liking tweet:", error);
+    }
   };
 
   const renderTweet = (t: Tweet) => {
