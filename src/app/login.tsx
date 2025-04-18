@@ -87,13 +87,24 @@ export default function LoginPage() {
         <h2>Sign in to your account</h2>
 
         {!wallet && (
-          <button className="btn" onClick={connectWallet} disabled={connectLoading}>
+          <button
+            className="btn"
+            onClick={connectWallet}
+            disabled={connectLoading}
+          >
             {connectLoading ? (
               <AiOutlineLoading className="btn-loader" />
             ) : (
               "Connect Wallet"
             )}
           </button>
+        )}
+
+        {wallet && isRegistered === null && (
+          <p style={{ textAlign: "center", marginTop: "1rem" }}>
+            <AiOutlineLoading className="loader" />
+            <br /> Checking registration...
+          </p>
         )}
 
         {/* Jika belum teregister */}
