@@ -87,7 +87,7 @@ export default function LoginPage() {
         <h2>Sign in to your account</h2>
 
         {!wallet && (
-          <button className="btn" onClick={connectWallet}>
+          <button className="btn" onClick={connectWallet} disabled={connectLoading}>
             {connectLoading ? (
               <AiOutlineLoading className="btn-loader" />
             ) : (
