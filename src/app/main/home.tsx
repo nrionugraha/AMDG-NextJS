@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { AiOutlineLoading } from "react-icons/ai";
 import { isUserRejectedError } from "../../utils/isUserRejectedError";
+import { useTheme } from "next-themes";
 
 const CONTRACT_ADDRESS = "0x789FB401acBA27e8fAeC793CC392536Da43BdB52";
 
@@ -42,7 +43,8 @@ export default function MainPage() {
   const [tweetText, setTweetText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [wallet, setWallet] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
+  // const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [commentBlank, setCommentBlank] = useState<Record<number, boolean>>({});
   const [tweetBlank, setTweetBlank] = useState(false);
@@ -50,9 +52,7 @@ export default function MainPage() {
   const commentInputRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
   useEffect(() => {
-    const savedMode = localStorage.getItem("darkMode") === "true";
-    setDarkMode(savedMode);
-    document.body.classList.toggle("dark", savedMode);
+    // setMounted(true);
     const connect = async () => {
       if (!window.ethereum) return alert("Please install MetaMask");
       const p = new ethers.providers.Web3Provider(window.ethereum);
@@ -71,10 +71,7 @@ export default function MainPage() {
   }, []);
 
   const toggleDarkMode = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    localStorage.setItem("darkMode", newMode.toString());
-    document.body.classList.toggle("dark", newMode);
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   const loadFeed = async (c: ethers.Contract, addr: string) => {
@@ -343,7 +340,7 @@ export default function MainPage() {
           <label className="switch">
             <input
               type="checkbox"
-              checked={darkMode}
+              checked={theme === "dark"}
               onChange={toggleDarkMode}
             />
             <span className="slider round" />

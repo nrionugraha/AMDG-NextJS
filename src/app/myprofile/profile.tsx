@@ -7,6 +7,7 @@ import CONTRACT_ABI from "../../abi/AMDG.json";
 import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineLoading } from "react-icons/ai";
+import { useTheme } from "next-themes";
 
 const CONTRACT_ADDRESS = "0x789FB401acBA27e8fAeC793CC392536Da43BdB52";
 
@@ -42,15 +43,12 @@ export default function MyProfilePage() {
   const [deletedTweets, setDeletedTweets] = useState<Tweet[]>([]);
   const [myComments, setMyComments] = useState<Comment[]>([]);
   const [commentCount, setCommentCount] = useState(0);
-  const [darkMode, setDarkMode] = useState(false);
+  const { theme, setTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
 
   const router = useRouter();
 
   useEffect(() => {
-    const savedMode = localStorage.getItem("darkMode") === "true";
-    setDarkMode(savedMode);
-    document.body.classList.toggle("dark", savedMode);
     const initProfile = async () => {
       if (!window.ethereum) return alert("Please install MetaMask");
       const p = new ethers.providers.Web3Provider(window.ethereum);
@@ -73,10 +71,7 @@ export default function MyProfilePage() {
   }, []);
 
   const toggleDarkMode = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    localStorage.setItem("darkMode", newMode.toString());
-    document.body.classList.toggle("dark", newMode);
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   const loadMyTweets = async (c: ethers.Contract, userAddress: string) => {
@@ -186,7 +181,7 @@ export default function MyProfilePage() {
           <label className="switch">
             <input
               type="checkbox"
-              checked={darkMode}
+              checked={theme === "dark"}
               onChange={toggleDarkMode}
             />
             <span className="slider round"></span>

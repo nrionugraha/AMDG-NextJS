@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import { useRouter } from "next/navigation";
 import { AiOutlineLoading } from "react-icons/ai";
 import CONTRACT_ABI from "../abi/AMDG.json";
+import { useTheme } from "next-themes";
 
 const CONTRACT_ADDRESS = "0x789FB401acBA27e8fAeC793CC392536Da43BdB52";
 
@@ -14,21 +15,17 @@ export default function LoginPage() {
   const [isRegistered, setIsRegistered] = useState<boolean | null>(null);
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [connectLoading, setConnectLoading] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   const router = useRouter();
 
   useEffect(() => {
-    const savedMode = localStorage.getItem("darkMode") === "true";
-    setDarkMode(savedMode);
-    document.body.classList.toggle("dark", savedMode);
+    setMounted(true);
   }, []);
 
   const toggleDarkMode = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    localStorage.setItem("darkMode", newMode.toString());
-    document.body.classList.toggle("dark", newMode);
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   const connectWallet = async () => {
@@ -140,13 +137,13 @@ export default function LoginPage() {
           <label className="switch">
             <input
               type="checkbox"
-              checked={darkMode}
+              checked={theme === "dark"}
               onChange={toggleDarkMode}
             />
             <span className="slider round" />
           </label>
           <span id="modeLabel" className="toggle-label">
-            {darkMode ? "Dark Mode" : "Light Mode"}
+            {mounted && (theme === "dark" ? "Dark Mode" : "Light Mode")}
           </span>
         </div>
       </div>

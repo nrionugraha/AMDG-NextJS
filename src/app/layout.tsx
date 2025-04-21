@@ -1,6 +1,7 @@
 import '../styles/style.css';
 import { ReactNode } from 'react';
 import { Metadata } from 'next';
+import { ThemeProvider } from 'next-themes';
 
 export const metadata: Metadata = {
     title: {
@@ -15,8 +16,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
     return (
-        <html lang="en">
-            <body>{children}</body>
+        <html lang="en"suppressHydrationWarning={true} >
+            <body>
+                <ThemeProvider>{children}</ThemeProvider>
+            </body>
         </html>  
     );
 }

@@ -96,7 +96,7 @@
   padding: 0;
 }
 
-body {
+:root {
   font-family: "SF Pro Text", sans-serif;
   background-color: #fff;
   color: #14171a;
@@ -105,7 +105,7 @@ body {
 }
 
 /* === Dark Mode Overrides === */
-body.dark {
+[data-theme="dark"] {
   background-color: #15202b;
   color: #e6e6e6;
 }
@@ -121,9 +121,10 @@ body.dark {
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-body.dark .navbar {
+[data-theme="dark"] .navbar {
   background-color: #192734;
   border-bottom: 1px solid #38444d;
+  color: white;
 }
 
 .nav-left, .nav-right {
@@ -215,7 +216,7 @@ input:checked + .slider:before {
   box-shadow: 0 4px 12px rgba(29, 161, 242, 0.4);
 }
 
-body.dark .btn {
+[data-theme="dark"] .btn {
   background-color: #1da1f2;
   color: #fff;
 }
@@ -286,7 +287,7 @@ body.dark .btn {
   outline: none;
 }
 
-body.dark .input, body.dark .tweet-input {
+[data-theme="dark"] .input, [data-theme="dark"] .tweet-input {
   background-color: #192734;
   border-color: #38444d;
   color: #e6e6e6;
@@ -301,8 +302,9 @@ body.dark .input, body.dark .tweet-input {
   background-color: #f5f8fa;
 }
 
-body.dark .login-container {
+[data-theme="dark"] .login-container {
   background-color: #15202b;
+  color: white;
 }
 
 .login-card {
@@ -315,7 +317,7 @@ body.dark .login-container {
   text-align: center;
 }
 
-body.dark .login-card {
+[data-theme="dark"] .login-card {
   background-color: #192734;
   border-color: #38444d;
 }
@@ -353,6 +355,7 @@ body.dark .login-card {
   padding: 0 10px;
 }
 
+
 .new-tweet {
   background-color: #fff;
   border: 1px solid #e6ecf0;
@@ -361,7 +364,7 @@ body.dark .login-card {
   margin-bottom: 20px;
 }
 
-body.dark .new-tweet {
+[data-theme="dark"] .new-tweet {
   background-color: #192734;
   border-color: #38444d;
 }
@@ -383,9 +386,10 @@ body.dark .new-tweet {
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-body.dark .card {
+[data-theme="dark"] .card {
   background-color: #192734;
   border-color: #38444d;
+  color: white;
 }
 
 .card p {
@@ -409,7 +413,7 @@ body.dark .card {
   text-align: center;
 }
 
-body.dark .profile-card {
+[data-theme="dark"] .profile-card {
   background-color: #192734;
   border-color: #38444d;
 }
@@ -432,7 +436,7 @@ body.dark .profile-card {
   color: #b0b0b0;
 }
 
-body.dark .wallet-address {
+[data-theme="dark"] .wallet-address {
   color: #8899a6;
 }
 
@@ -543,13 +547,13 @@ transition: stroke 0.2s ease;
 stroke: #1da1f2;
 }
 
-body.dark .icon-heart,
-body.dark .icon-comment {
+[data-theme="dark"] .icon-heart,
+[data-theme="dark"] .icon-comment {
 stroke: #8899a6; 
 }
 
-body.dark .icon-btn:hover .icon-heart,
-body.dark .icon-btn:hover .icon-comment {
+[data-theme="dark"] .icon-btn:hover .icon-heart,
+[data-theme="dark"] .icon-btn:hover .icon-comment {
 stroke: #1da1f2;
 }
 
@@ -562,7 +566,7 @@ fill: red;
 stroke: rgb(255, 255, 255);
 }
 
-body.dark .icon-btn.liked:hover .icon-heart {
+[data-theme="dark"] .icon-btn.liked:hover .icon-heart {
 stroke: rgba(29,161,242,0.1);
 }
 
@@ -621,7 +625,7 @@ word-break: break-all;
   word-break: break-all;
 }
 
-body.dark .user-name {
+[data-theme="dark"] .user-name {
   color : white
 }
 
