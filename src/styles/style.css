@@ -448,6 +448,10 @@ input:checked + .slider:before {
   margin-bottom: 10px;
 }
 
+.my-tweets h3 {
+  margin-bottom: 10px;
+}
+
 .comment-section {
   display: flex;
   align-items: center;

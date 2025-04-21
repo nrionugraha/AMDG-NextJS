@@ -236,8 +236,8 @@ export default function MyProfilePage() {
                         <span className="tweet-meta">
                           {comment.author} -{" "}
                           {new Date(comment.timestamp * 1000).toLocaleString()}
-                        </span>
-                        : {comment.text}
+                        </span> 
+                        :<br /> {comment.text}
                       </p>
                     ))}
                   </div>
